@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #ccc;
+  color: #333;
+}
+
+#__next {
+  display: flex;
+  flex-direction: column;
+  max-width: 1280px;
+  min-height: 100vh;
+  margin: auto;
+  padding: 50px;
+}
+
+@media (max-width: 480px) {
+  #__next {
+    padding: 20px;
+  }
+}

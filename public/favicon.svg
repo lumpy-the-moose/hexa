@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="64"
+   height="64"
+   viewBox="0 0 62.065719 62.065719"
+   class="css-1j8o68f"
+   version="1.1"
+   id="svg18"
+   sodipodi:docname="favicon.svg"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview8"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="6.4140625"
+     inkscape:cx="38.041413"
+     inkscape:cy="34.923264"
+     inkscape:window-width="1920"
+     inkscape:window-height="1007"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg18" />
+  <defs
+     id="SvgjsDefs1212" />
+  <g
+     id="SvgjsG1213"
+     featurekey="rootContainer"
+     transform="matrix(1.06962,0,0,1.06962,4.5059951,0.9604927)"
+     fill="#2a2438"
+     style="fill:none;fill-opacity:1;stroke:#ff0088;stroke-width:1.78868;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
+    <path
+       d="M 23.11,55.78 1.69,43.41 A 3.39,3.39 0 0 1 0,40.48 V 15.75 A 3.39,3.39 0 0 1 1.69,12.81 L 23.11,0.45 a 3.39,3.39 0 0 1 3.39,0 l 21.41,12.37 a 3.39,3.39 0 0 1 1.69,2.94 v 24.72 a 3.39,3.39 0 0 1 -1.69,2.94 L 26.5,55.78 a 3.39,3.39 0 0 1 -3.39,0 z"
+       id="path3"
+       style="fill:none;fill-opacity:1;stroke:#ff0088;stroke-width:1.78868;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>
