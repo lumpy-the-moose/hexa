@@ -18,9 +18,8 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <link rel="icon" type="image/x-icon" href="favicon.svg" />
-        <title>Hexa - Photo Finder</title>
+        <title>Hexa - Movie Finder</title>
       </Head>
-
       <Component {...pageProps} />
     </>
   );
