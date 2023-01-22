@@ -1,16 +1,19 @@
 import '@/styles/globals.css';
 import Head from 'next/head';
-import { Overlock } from '@next/font/google';
+import { Roboto } from '@next/font/google';
 import { AppProps } from 'next/app';
 
-const overlock = Overlock({ subsets: ['latin'], weight: ['400'] });
+import { store } from '@/components/App/store';
+import { Provider } from 'react-redux';
+
+const roboto = Roboto({ subsets: ['latin'], weight: ['400'] });
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <style jsx global>{`
         html {
-          font-family: ${overlock.style.fontFamily};
+          font-family: ${roboto.style.fontFamily};
         }
       `}</style>
 
@@ -20,7 +23,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" type="image/x-icon" href="favicon.svg" />
         <title>Hexa - Movie Finder</title>
       </Head>
-      <Component {...pageProps} />
+      <Provider store={store}>
+        <Component {...pageProps} />
+      </Provider>
     </>
   );
 }
