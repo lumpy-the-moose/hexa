@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useAppSelector, useAppDispatch } from '../components/App/hooks';
 import { IconContext } from 'react-icons';
 import { FiLogIn, FiLogOut } from 'react-icons/fi';
+
+import { setSignedIn } from '@/components/App/hexaSlice';
 
 import { initializeApp } from 'firebase/app';
 import {
@@ -27,9 +30,10 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 export default function Auth() {
-  const [signedIn, setSignedIn] = useState(false);
   const [email, setEmail] = useState<string | null>('');
   const [avatarURL, setAvatarURL] = useState<string | null>('');
+  const { signedIn } = useAppSelector(state => state.hexa);
+  const dispatch = useAppDispatch();
 
   const router = useRouter();
 
@@ -43,14 +47,14 @@ export default function Auth() {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         const uid = user.uid;
-        setSignedIn(true);
+        dispatch(setSignedIn(true));
         setEmail(user.email);
         setAvatarURL(user.photoURL);
-        console.log(user);
+        console.log('SignedIn');
         // ...
       } else {
         // User is signed out
-        setSignedIn(false);
+        dispatch(setSignedIn(false));
         console.log('SignedOut');
         // ...
       }

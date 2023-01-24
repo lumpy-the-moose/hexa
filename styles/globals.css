@@ -16,8 +16,18 @@ body {
   padding: 50px;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   #__next {
     padding: 20px;
+  }
+}
+
+.rodal-dialog {
+  width: 350px !important;
+}
+
+@media (max-width: 639px) {
+  .rodal-dialog {
+    width: 250px !important;
   }
 }

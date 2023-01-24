@@ -16,7 +16,9 @@ export default function Search() {
   async function fetchTrending() {
     return await axios(
       `https://api.themoviedb.org/3/trending/movie/day?api_key=${APIKEY}&adult=false`
-    ).then(r => dispatch(updateFetchedMovies(r.data.results)));
+    )
+      .then(r => dispatch(updateFetchedMovies(r.data.results)))
+      .then(r => console.log(r));
   }
 
   async function fetchMovies(query: string) {
@@ -35,7 +37,7 @@ export default function Search() {
     >
       <input
         type="text"
-        className="grow min-w-0 px-4 text-xl rounded-l-md outline-none"
+        className="grow min-w-0 px-4 min-[480px]:text-xl rounded-l-md outline-none"
         placeholder="find awesome movies"
         onChange={e => setSearchQuery(e.target.value)}
         value={searchQuery ? searchQuery : ''}
