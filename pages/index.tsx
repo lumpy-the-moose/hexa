@@ -1,8 +1,7 @@
 import Image from 'next/image';
-import { useAppSelector, useAppDispatch } from '../components/App/hooks';
+import { useAppSelector } from '@/components/App/hooks';
 import { useRouter } from 'next/router';
 
-import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 
 import Auth from '@/components/Auth';
@@ -24,7 +23,7 @@ export default function Home() {
           width={64}
           height={64}
           className="max-[480px]:hidden cursor-pointer"
-          onClick={() => router.push('/')}
+          onClick={() => router.reload()}
         />
         <Auth />
       </div>

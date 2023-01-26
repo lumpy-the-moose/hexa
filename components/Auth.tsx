@@ -4,7 +4,9 @@ import { useAppSelector, useAppDispatch } from '../components/App/hooks';
 import { IconContext } from 'react-icons';
 import { FiLogIn, FiLogOut } from 'react-icons/fi';
 
-import { setSignedIn } from '@/components/App/hexaSlice';
+import { setSignedIn, setFavoriteMovies } from '@/components/App/hexaSlice';
+
+import { updateUser, fetchFavoriteMovies } from './dBase';
 
 import { initializeApp } from 'firebase/app';
 import {
@@ -22,9 +24,11 @@ const firebaseConfig = {
   storageBucket: 'hexa-f88fc.appspot.com',
   messagingSenderId: '203913453445',
   appId: '1:203913453445:web:df6ab17e05707534d92eec',
+  databaseURL: 'https://hexa-f88fc-default-rtdb.europe-west1.firebasedatabase.app/',
 };
 
 // Initialize Firebase
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
@@ -42,7 +46,7 @@ export default function Auth() {
   }, []);
 
   function authCheck() {
-    onAuthStateChanged(auth, user => {
+    onAuthStateChanged(auth, async user => {
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
@@ -51,11 +55,16 @@ export default function Auth() {
         setEmail(user.email);
         setAvatarURL(user.photoURL);
         console.log('SignedIn');
+        document.cookie = `uid=${uid}; path=/`;
+        const favoriteMovies = await fetchFavoriteMovies(document.cookie.slice(4));
+        dispatch(setFavoriteMovies(favoriteMovies));
+
         // ...
       } else {
         // User is signed out
         dispatch(setSignedIn(false));
         console.log('SignedOut');
+        document.cookie = `uid=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
         // ...
       }
     });
@@ -68,7 +77,8 @@ export default function Auth() {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
         // The signed-in user info.
-        const user = result.user;
+        const { uid, email } = result.user;
+        updateUser(uid, email);
       })
       .catch(error => {
         // Handle Errors here.
@@ -93,7 +103,7 @@ export default function Auth() {
   }
 
   return (
-    <div className="flex gap-4 ml-auto">
+    <div className="flex gap-4 h-12 ml-auto">
       {signedIn && (
         <button
           onClick={() => router.push('/favorites')}

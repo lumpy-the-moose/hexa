@@ -3,13 +3,23 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface authState {
   signedIn: boolean;
   fetchedMovies: any[];
-  selectedMovie: number | null;
+  favoriteMovies: [];
+  selectedMovie: Movie;
+  modalOpened: boolean;
 }
 
 const initialState: authState = {
   signedIn: false,
   fetchedMovies: [],
-  selectedMovie: null,
+  favoriteMovies: [],
+  selectedMovie: {
+    poster_path: '',
+    title: '',
+    release_date: '',
+    overview: '',
+    id: -1,
+  },
+  modalOpened: false,
 };
 
 export const hexaSlice = createSlice({
@@ -19,16 +29,27 @@ export const hexaSlice = createSlice({
     setSignedIn: (state, action: PayloadAction<boolean>) => {
       state.signedIn = action.payload;
     },
-    updateFetchedMovies: (state, action: PayloadAction<[]>) => {
+    setFetchedMovies: (state, action: PayloadAction<[]>) => {
       state.fetchedMovies = [...action.payload];
     },
-    updateSelectedMovie: (state, action: PayloadAction<number | null>) => {
-      state.selectedMovie = action.payload;
+    setFavoriteMovies: (state, action: PayloadAction<[]>) => {
+      state.favoriteMovies = [...action.payload];
+    },
+    setSelectedMovie: (state, action: PayloadAction<Movie>) => {
+      state.selectedMovie = { ...action.payload };
+    },
+    setModalOpened: (state, action: PayloadAction<boolean>) => {
+      state.modalOpened = action.payload;
     },
   },
 });
 
-export const { setSignedIn, updateFetchedMovies, updateSelectedMovie } =
-  hexaSlice.actions;
+export const {
+  setSignedIn,
+  setFetchedMovies,
+  setFavoriteMovies,
+  setSelectedMovie,
+  setModalOpened,
+} = hexaSlice.actions;
 
 export default hexaSlice.reducer;
