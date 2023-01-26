@@ -57,7 +57,7 @@ export default function Auth() {
         console.log('SignedIn');
         document.cookie = `uid=${uid}; path=/`;
         const favoriteMovies = await fetchFavoriteMovies(document.cookie.slice(4));
-        dispatch(setFavoriteMovies(favoriteMovies));
+        favoriteMovies && dispatch(setFavoriteMovies(favoriteMovies));
 
         // ...
       } else {

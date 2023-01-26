@@ -2,10 +2,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface authState {
   signedIn: boolean;
-  fetchedMovies: any[];
+  fetchedMovies: Movie[];
   favoriteMovies: [];
   selectedMovie: Movie;
   modalOpened: boolean;
+  isFavorite: boolean;
 }
 
 const initialState: authState = {
@@ -20,6 +21,7 @@ const initialState: authState = {
     id: -1,
   },
   modalOpened: false,
+  isFavorite: false,
 };
 
 export const hexaSlice = createSlice({
@@ -41,6 +43,9 @@ export const hexaSlice = createSlice({
     setModalOpened: (state, action: PayloadAction<boolean>) => {
       state.modalOpened = action.payload;
     },
+    setIsFavorite: (state, action: PayloadAction<boolean>) => {
+      state.isFavorite = action.payload;
+    },
   },
 });
 
@@ -50,6 +55,7 @@ export const {
   setFavoriteMovies,
   setSelectedMovie,
   setModalOpened,
+  setIsFavorite,
 } = hexaSlice.actions;
 
 export default hexaSlice.reducer;

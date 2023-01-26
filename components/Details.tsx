@@ -1,17 +1,34 @@
 import { useAppSelector, useAppDispatch } from './App/hooks';
+import { useEffect } from 'react';
+import { IconContext } from 'react-icons';
+import { FiHeart, FiTrash } from 'react-icons/fi';
 
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 
-import { setModalOpened } from '@/components/App/hexaSlice';
+import {
+  setFavoriteMovies,
+  setModalOpened,
+  setIsFavorite,
+} from '@/components/App/hexaSlice';
 
-import { addFavoriteMovie } from './dBase';
+import { fetchFavoriteMovies, addFavoriteMovie, removeFavoriteMovie } from './dBase';
 
 export default function Details() {
-  const { selectedMovie, modalOpened } = useAppSelector(state => state.hexa);
+  const { selectedMovie, modalOpened, favoriteMovies, isFavorite } = useAppSelector(
+    state => state.hexa
+  );
   const dispatch = useAppDispatch();
 
   const { poster_path, title, release_date, overview, id }: Movie = selectedMovie;
+
+  useEffect(() => {
+    dispatch(
+      setIsFavorite(
+        favoriteMovies.some((movie: Movie) => movie.id === selectedMovie.id)
+      )
+    );
+  }, [favoriteMovies, selectedMovie]);
 
   return (
     <Rodal
@@ -27,20 +44,49 @@ export default function Details() {
         backgroundColor: '#000000cc',
       }}
     >
-      <div className="w-[250px] sm:w-[350px]">
+      <div className="group relative w-[250px] sm:w-[350px] bg-black">
+        <IconContext.Provider
+          value={{
+            size: '64px',
+            color: '#f43f5e',
+          }}
+        >
+          {isFavorite ? (
+            <FiTrash
+              className="absolute inset-x-1/2 inset-y-1/3 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 duration-500 cursor-pointer z-[1]"
+              onClick={async () => {
+                removeFavoriteMovie(document.cookie.slice(4), id);
+                const favoriteMovies = await fetchFavoriteMovies(
+                  document.cookie.slice(4)
+                );
+                favoriteMovies && dispatch(setFavoriteMovies(favoriteMovies));
+                dispatch(setModalOpened(false));
+              }}
+            />
+          ) : (
+            <FiHeart
+              className="absolute inset-x-1/2 inset-y-1/3 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 duration-500 cursor-pointer z-[1]"
+              onClick={async () => {
+                addFavoriteMovie(document.cookie.slice(4), {
+                  poster_path,
+                  title,
+                  release_date,
+                  overview,
+                  id,
+                });
+                const favoriteMovies = await fetchFavoriteMovies(
+                  document.cookie.slice(4)
+                );
+                favoriteMovies && dispatch(setFavoriteMovies(favoriteMovies));
+                dispatch(setModalOpened(false));
+              }}
+            />
+          )}
+        </IconContext.Provider>
         <img
           src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
           alt={title}
-          className="object-cover"
-          onDoubleClick={() =>
-            addFavoriteMovie(document.cookie.slice(4), {
-              poster_path,
-              title,
-              release_date,
-              overview,
-              id,
-            })
-          }
+          className="object-cover hover:bg-black group-hover:opacity-50 duration-500"
         />
         <div className="p-2 bg-gray-500">
           <p className="text-white break-words">{title}</p>

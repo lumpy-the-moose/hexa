@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, update, child, get } from 'firebase/database';
+import { getDatabase, ref, update, child, get, remove } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDcZV0jOUp8kR0f37kEjlpx5ETD32I86gs',
@@ -30,6 +30,12 @@ export function addFavoriteMovie(userId: string, movie: Movie) {
   }
 }
 
+export function removeFavoriteMovie(userId: string, movieId: number) {
+  if (userId) {
+    remove(ref(database, 'users/' + userId + '/favoriteMovies/' + movieId));
+  }
+}
+
 export async function fetchFavoriteMovies(uid: string): Promise<any> {
   const favoriteMoviesRef = ref(getDatabase());
 
@@ -40,6 +46,7 @@ export async function fetchFavoriteMovies(uid: string): Promise<any> {
         return Object.values(snapshot.val());
       } else {
         console.log('No data available');
+        return [];
       }
     }
   );
