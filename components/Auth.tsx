@@ -109,7 +109,7 @@ export default function Auth() {
           onClick={() => router.push('/favorites')}
           className="flex items-center gap-2 px-4 py-2 bg-gray-200 rounded-full cursor-pointer"
         >
-          {email}
+          <div className="max-[768px]:hidden ">{email}</div>
           <img
             src={avatarURL ? avatarURL : undefined}
             alt="user photo"

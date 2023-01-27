@@ -22,7 +22,7 @@ export default function Home() {
           alt={'project logo'}
           width={64}
           height={64}
-          className="max-[480px]:hidden cursor-pointer"
+          className="cursor-pointer"
           onClick={() => router.reload()}
         />
         <Auth />

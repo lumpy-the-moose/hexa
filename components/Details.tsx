@@ -44,50 +44,52 @@ export default function Details() {
         backgroundColor: '#000000cc',
       }}
     >
-      <div className="group relative w-[250px] sm:w-[350px] bg-black">
-        <IconContext.Provider
-          value={{
-            size: '64px',
-            color: '#f43f5e',
-          }}
-        >
-          {isFavorite ? (
-            <FiTrash
-              className="absolute inset-x-1/2 inset-y-1/3 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 duration-500 cursor-pointer z-[1]"
-              onClick={async () => {
-                removeFavoriteMovie(document.cookie.slice(4), id);
-                const favoriteMovies = await fetchFavoriteMovies(
-                  document.cookie.slice(4)
-                );
-                favoriteMovies && dispatch(setFavoriteMovies(favoriteMovies));
-                dispatch(setModalOpened(false));
-              }}
-            />
-          ) : (
-            <FiHeart
-              className="absolute inset-x-1/2 inset-y-1/3 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 duration-500 cursor-pointer z-[1]"
-              onClick={async () => {
-                addFavoriteMovie(document.cookie.slice(4), {
-                  poster_path,
-                  title,
-                  release_date,
-                  overview,
-                  id,
-                });
-                const favoriteMovies = await fetchFavoriteMovies(
-                  document.cookie.slice(4)
-                );
-                favoriteMovies && dispatch(setFavoriteMovies(favoriteMovies));
-                dispatch(setModalOpened(false));
-              }}
-            />
-          )}
-        </IconContext.Provider>
-        <img
-          src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-          alt={title}
-          className="object-cover hover:bg-black group-hover:opacity-50 duration-500"
-        />
+      <div className="group w-[250px] sm:w-[350px] bg-black">
+        <div className="relative">
+          <IconContext.Provider
+            value={{
+              size: '64px',
+              color: '#f43f5e',
+            }}
+          >
+            {isFavorite ? (
+              <FiTrash
+                className="absolute inset-x-1/2 top-[70%] -translate-x-1/2 -translate-y-1/2 opacity-0 max-[768px]:opacity-100 group-hover:opacity-100 duration-500 cursor-pointer z-[1]"
+                onClick={async () => {
+                  removeFavoriteMovie(document.cookie.slice(4), id);
+                  const favoriteMovies = await fetchFavoriteMovies(
+                    document.cookie.slice(4)
+                  );
+                  favoriteMovies && dispatch(setFavoriteMovies(favoriteMovies));
+                  dispatch(setModalOpened(false));
+                }}
+              />
+            ) : (
+              <FiHeart
+                className="absolute inset-x-1/2 top-[70%] -translate-x-1/2 -translate-y-1/2 opacity-0 max-[768px]:opacity-100 group-hover:opacity-100 duration-500 cursor-pointer z-[1]"
+                onClick={async () => {
+                  addFavoriteMovie(document.cookie.slice(4), {
+                    poster_path,
+                    title,
+                    release_date,
+                    overview,
+                    id,
+                  });
+                  const favoriteMovies = await fetchFavoriteMovies(
+                    document.cookie.slice(4)
+                  );
+                  favoriteMovies && dispatch(setFavoriteMovies(favoriteMovies));
+                  dispatch(setModalOpened(false));
+                }}
+              />
+            )}
+          </IconContext.Provider>
+          <img
+            src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+            alt={title}
+            className="object-cover hover:bg-black group-hover:opacity-50 duration-500"
+          />
+        </div>
         <div className="p-2 bg-gray-500">
           <p className="text-white break-words">{title}</p>
           <p className="text-white">{release_date?.slice(0, 4)}</p>
