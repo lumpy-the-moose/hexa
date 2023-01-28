@@ -32,7 +32,7 @@ export const hexaSlice = createSlice({
       state.signedIn = action.payload;
     },
     setFetchedMovies: (state, action: PayloadAction<[]>) => {
-      state.fetchedMovies = [...action.payload];
+      state.fetchedMovies = [...state.fetchedMovies, ...action.payload];
     },
     setFavoriteMovies: (state, action: PayloadAction<[]>) => {
       state.favoriteMovies = [...action.payload];
