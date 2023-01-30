@@ -56,10 +56,6 @@ export default function Gallery() {
     });
 
     observer.observe(loader.current!);
-
-    return () => {
-      observer.unobserve(loader.current!);
-    };
   }, [hasMore]);
 
   const markup = fetchedMovies.map(
