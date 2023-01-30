@@ -56,6 +56,10 @@ export default function Gallery() {
     });
 
     observer.observe(loader.current!);
+
+    return () => {
+      observer.disconnect();
+    };
   }, [hasMore]);
 
   const markup = fetchedMovies.map(
