@@ -1,30 +1,66 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAppSelector, useAppDispatch } from './App/hooks';
 
 import {
+  incrementPage,
   setSelectedMovie,
   setModalOpened,
   setFetchedMovies,
 } from '@/components/App/hexaSlice';
 
-import InfiniteScroll from 'react-infinite-scroller';
-
-import { fetchTrending } from './Search';
+import { fetchTrending, fetchMovies } from './Search';
 
 export default function Gallery() {
-  const [page, setPage] = useState<number>(1);
-  const { fetchedMovies } = useAppSelector(state => state.hexa);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const { searchActivated, fetchedMovies, searchQuery, page } = useAppSelector(
+    state => state.hexa
+  );
   const dispatch = useAppDispatch();
 
-  const loadMoreHandler = useCallback(
-    (page: number) => {
+  const loader = useRef(null);
+
+  useEffect(() => {
+    if (page === 0) {
+      console.log('page === 0', page === 0);
+      setHasMore(true);
+      return;
+    }
+
+    if (searchActivated) {
       console.log(page);
+      if (hasMore) {
+        console.log(hasMore);
+        fetchMovies(searchQuery, page).then(r => {
+          console.log('r.total_pages', r.total_pages);
+          dispatch(setFetchedMovies(r.results));
+
+          if (page >= r.total_pages) {
+            setHasMore(false);
+            console.log('hasMore setted to false');
+          }
+        });
+      }
+    } else {
       fetchTrending(page).then(r => {
         dispatch(setFetchedMovies(r));
       });
-    },
-    [page]
-  );
+    }
+  }, [page]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        console.log('intersecting');
+        dispatch(incrementPage());
+      }
+    });
+
+    observer.observe(loader.current!);
+
+    return () => {
+      observer.unobserve(loader.current!);
+    };
+  }, [hasMore]);
 
   const markup = fetchedMovies.map(
     ({ poster_path, title, release_date, overview, id }: Movie) => {
@@ -55,19 +91,9 @@ export default function Gallery() {
   );
 
   return (
-    <InfiniteScroll
-      className="flex justify-center flex-wrap gap-5"
-      pageStart={0}
-      initialLoad={true}
-      loadMore={loadMoreHandler}
-      hasMore={true}
-      loader={
-        <div className="loader" key={0}>
-          Loading ...
-        </div>
-      }
-    >
-      {markup}
-    </InfiniteScroll>
+    <>
+      <div className="flex justify-center flex-wrap gap-5">{markup}</div>
+      <div ref={loader}></div>
+    </>
   );
 }

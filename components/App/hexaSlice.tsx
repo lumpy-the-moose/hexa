@@ -2,6 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface authState {
   signedIn: boolean;
+  searchQuery: string;
+  searchActivated: boolean;
+  page: number;
   fetchedMovies: Movie[];
   favoriteMovies: [];
   selectedMovie: Movie;
@@ -11,6 +14,9 @@ interface authState {
 
 const initialState: authState = {
   signedIn: false,
+  searchQuery: '',
+  searchActivated: false,
+  page: 0,
   fetchedMovies: [],
   favoriteMovies: [],
   selectedMovie: {
@@ -31,8 +37,23 @@ export const hexaSlice = createSlice({
     setSignedIn: (state, action: PayloadAction<boolean>) => {
       state.signedIn = action.payload;
     },
+    setSearchQuery: (state, action: PayloadAction<string>) => {
+      state.searchQuery = action.payload;
+    },
+    setSearchActivated: (state, action: PayloadAction<boolean>) => {
+      state.searchActivated = action.payload;
+    },
+    incrementPage: state => {
+      state.page += 1;
+    },
+    resetPage: state => {
+      state.page = 0;
+    },
     setFetchedMovies: (state, action: PayloadAction<[]>) => {
       state.fetchedMovies = [...state.fetchedMovies, ...action.payload];
+    },
+    clearFetchedMovies: state => {
+      state.fetchedMovies = [];
     },
     setFavoriteMovies: (state, action: PayloadAction<[]>) => {
       state.favoriteMovies = [...action.payload];
@@ -51,7 +72,12 @@ export const hexaSlice = createSlice({
 
 export const {
   setSignedIn,
+  setSearchQuery,
+  setSearchActivated,
+  incrementPage,
+  resetPage,
   setFetchedMovies,
+  clearFetchedMovies,
   setFavoriteMovies,
   setSelectedMovie,
   setModalOpened,
