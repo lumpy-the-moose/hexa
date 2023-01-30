@@ -43,7 +43,7 @@ export default function Favorites() {
   return (
     <>
       <div className="flex flex-col gap-5">
-        <div className="flex items-center">
+        <div className="sticky top-0 z-10 flex items-center p-2 bg-[#00e6b8] rounded-lg">
           <Image
             src={'logo.svg'}
             alt={'project logo'}
