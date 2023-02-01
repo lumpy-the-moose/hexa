@@ -16,7 +16,7 @@ const initialState: authState = {
   signedIn: false,
   searchQuery: '',
   searchActivated: false,
-  page: 0,
+  page: 1,
   fetchedMovies: [],
   favoriteMovies: [],
   selectedMovie: {

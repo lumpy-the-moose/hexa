@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useAppSelector, useAppDispatch } from '../components/App/hooks';
+import { useAppSelector, useAppDispatch } from '@/components/App/hooks';
 import { IconContext } from 'react-icons';
 import { FiLogIn, FiLogOut } from 'react-icons/fi';
 

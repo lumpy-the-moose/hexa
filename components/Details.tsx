@@ -6,11 +6,7 @@ import { FiHeart, FiTrash } from 'react-icons/fi';
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 
-import {
-  setFavoriteMovies,
-  setModalOpened,
-  setIsFavorite,
-} from '@/components/App/hexaSlice';
+import { setFavoriteMovies, setModalOpened, setIsFavorite } from '@/components/App/hexaSlice';
 
 import { fetchFavoriteMovies, addFavoriteMovie, removeFavoriteMovie } from './dBase';
 
@@ -23,11 +19,7 @@ export default function Details() {
   const { poster_path, title, release_date, overview, id }: Movie = selectedMovie;
 
   useEffect(() => {
-    dispatch(
-      setIsFavorite(
-        favoriteMovies.some((movie: Movie) => movie.id === selectedMovie.id)
-      )
-    );
+    dispatch(setIsFavorite(favoriteMovies.some((movie: Movie) => movie.id === selectedMovie.id)));
   }, [favoriteMovies, selectedMovie]);
 
   return (
@@ -57,9 +49,7 @@ export default function Details() {
               className="absolute inset-x-1/2 top-[70%] -translate-x-1/2 -translate-y-1/2 opacity-0 max-[768px]:opacity-100 group-hover:opacity-100 duration-500 cursor-pointer z-[1]"
               onClick={async () => {
                 removeFavoriteMovie(document.cookie.slice(4), id);
-                const favoriteMovies = await fetchFavoriteMovies(
-                  document.cookie.slice(4)
-                );
+                const favoriteMovies = await fetchFavoriteMovies(document.cookie.slice(4));
                 favoriteMovies && dispatch(setFavoriteMovies(favoriteMovies));
                 dispatch(setModalOpened(false));
               }}
@@ -75,9 +65,7 @@ export default function Details() {
                   overview,
                   id,
                 });
-                const favoriteMovies = await fetchFavoriteMovies(
-                  document.cookie.slice(4)
-                );
+                const favoriteMovies = await fetchFavoriteMovies(document.cookie.slice(4));
                 favoriteMovies && dispatch(setFavoriteMovies(favoriteMovies));
                 dispatch(setModalOpened(false));
               }}

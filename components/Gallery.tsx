@@ -10,11 +10,9 @@ import {
 
 import { fetchTrending, fetchMovies } from './Search';
 
-export default function Gallery() {
+export default function Gallery({ trendingMovies }: { trendingMovies: [] }) {
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const { searchActivated, fetchedMovies, searchQuery, page } = useAppSelector(
-    state => state.hexa
-  );
+  const { searchActivated, fetchedMovies, searchQuery, page } = useAppSelector(state => state.hexa);
   const dispatch = useAppDispatch();
 
   const loader = useRef(null);
@@ -36,14 +34,16 @@ export default function Gallery() {
 
           if (page >= r.total_pages) {
             setHasMore(false);
-            console.log('hasMore setted to false');
+            console.log('hasMore set to false');
           }
         });
       }
     } else {
-      fetchTrending(page).then(r => {
-        dispatch(setFetchedMovies(r));
-      });
+      page === 1
+        ? dispatch(setFetchedMovies(trendingMovies))
+        : fetchTrending(page).then(r => {
+            dispatch(setFetchedMovies(r));
+          });
     }
   }, [page]);
 
@@ -62,33 +62,29 @@ export default function Gallery() {
     };
   }, [hasMore]);
 
-  const markup = fetchedMovies.map(
-    ({ poster_path, title, release_date, overview, id }: Movie) => {
-      return (
-        <div
-          key={id}
-          className="w-[220px] min-h-[400px] bg-gray-800 rounded-b-md hover:scale-[1.03] transition-transform cursor-pointer"
-          onClick={() => {
-            dispatch(
-              setSelectedMovie({ poster_path, title, release_date, overview, id })
-            );
-            dispatch(setModalOpened(true));
-          }}
-        >
-          <img
-            src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-            alt={title}
-            width="220"
-            className="object-cover"
-          />
-          <div className="w-[220px] p-2">
-            <p className="text-white break-words">{title}</p>
-            <p className="text-white">{release_date?.slice(0, 4)}</p>
-          </div>
+  const markup = fetchedMovies.map(({ poster_path, title, release_date, overview, id }: Movie) => {
+    return (
+      <div
+        key={id}
+        className="w-[220px] min-h-[400px] bg-gray-800 rounded-b-md hover:scale-[1.03] transition-transform cursor-pointer"
+        onClick={() => {
+          dispatch(setSelectedMovie({ poster_path, title, release_date, overview, id }));
+          dispatch(setModalOpened(true));
+        }}
+      >
+        <img
+          src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+          alt={title}
+          width="220"
+          className="object-cover"
+        />
+        <div className="w-[220px] p-2">
+          <p className="text-white break-words">{title}</p>
+          <p className="text-white">{release_date?.slice(0, 4)}</p>
         </div>
-      );
-    }
-  );
+      </div>
+    );
+  });
 
   return (
     <>

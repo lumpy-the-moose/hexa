@@ -39,15 +39,13 @@ export function removeFavoriteMovie(userId: string, movieId: number) {
 export async function fetchFavoriteMovies(uid: string): Promise<any> {
   const favoriteMoviesRef = ref(getDatabase());
 
-  return await get(child(favoriteMoviesRef, `users/${uid}/favoriteMovies/`)).then(
-    snapshot => {
-      if (snapshot.exists()) {
-        console.log(Object.values(snapshot.val()));
-        return Object.values(snapshot.val());
-      } else {
-        console.log('No data available');
-        return [];
-      }
+  return await get(child(favoriteMoviesRef, `users/${uid}/favoriteMovies/`)).then(snapshot => {
+    if (snapshot.exists()) {
+      console.log(Object.values(snapshot.val()));
+      return Object.values(snapshot.val());
+    } else {
+      console.log('No data available');
+      return [];
     }
-  );
+  });
 }

@@ -1,12 +1,7 @@
 import axios from 'axios';
 import { useAppSelector, useAppDispatch } from './App/hooks';
 
-import {
-  setSearchQuery,
-  setSearchActivated,
-  clearFetchedMovies,
-  resetPage,
-} from './App/hexaSlice';
+import { setSearchQuery, setSearchActivated, clearFetchedMovies, resetPage } from './App/hexaSlice';
 
 const APIKEY = 'c3c6a5436a9f4e63accef267f4683152';
 

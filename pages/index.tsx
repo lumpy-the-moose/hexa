@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import { useAppSelector } from '@/components/App/hooks';
 import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
+import axios from 'axios';
 
 import 'rodal/lib/rodal.css';
 
@@ -9,7 +11,22 @@ import Search from '@/components/Search';
 import Gallery from '@/components/Gallery';
 import Details from '@/components/Details';
 
-export default function Home() {
+export const getServerSideProps: GetServerSideProps<{
+  trendingMovies: [];
+}> = async () => {
+  const res = await axios(
+    'https://api.themoviedb.org/3/trending/movie/day?api_key=c3c6a5436a9f4e63accef267f4683152&adult=false&page=1'
+  );
+  const trendingMovies = res.data.results;
+
+  return {
+    props: {
+      trendingMovies,
+    },
+  };
+};
+
+export default function Home({ trendingMovies }: { trendingMovies: [] }) {
   const { selectedMovie } = useAppSelector(state => state.hexa);
 
   const router = useRouter();
@@ -30,7 +47,7 @@ export default function Home() {
         </div>
         <Search />
       </div>
-      <Gallery />
+      <Gallery trendingMovies={trendingMovies} />
       {selectedMovie && <Details />}
     </div>
   );
