@@ -1,95 +1,103 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { useAppSelector, useAppDispatch } from './App/hooks';
+import axios from 'axios';
 
 import {
   incrementPage,
   setSelectedMovie,
   setModalOpened,
   setFetchedMovies,
+  clearFetchedMovies,
+  setIsLoading,
+  setHasMore,
 } from '@/components/App/hexaSlice';
 
-import { fetchTrending, fetchMovies } from './Search';
+import { APIKEY } from '@/pages';
 
-export default function Gallery({ trendingMovies }: { trendingMovies: [] }) {
-  const [hasMore, setHasMore] = useState<boolean>(true);
-  const { searchActivated, fetchedMovies, searchQuery, page } = useAppSelector(state => state.hexa);
+export default function Gallery() {
+  const { fetchedMovies, searchQuery, page, isLoading, hasMore } = useAppSelector(
+    state => state.hexa
+  );
   const dispatch = useAppDispatch();
 
-  const loader = useRef(null);
+  useEffect(() => {
+    if (!searchQuery) return;
+    console.log('clear');
+    dispatch(clearFetchedMovies());
+  }, [searchQuery]);
 
   useEffect(() => {
-    if (page === 0) {
-      console.log('page === 0', page === 0);
-      setHasMore(true);
-      return;
+    if (!searchQuery && page !== 1) {
+      console.log('fetchTrending');
+      dispatch(setIsLoading(true));
+      axios(
+        `https://api.themoviedb.org/3/trending/movie/day?api_key=${APIKEY}&adult=false&page=${page}`
+      ).then(res => {
+        dispatch(setFetchedMovies(res.data.results));
+        dispatch(setHasMore(page < res.data.total_pages));
+        dispatch(setIsLoading(false));
+      });
+    } else if (searchQuery) {
+      console.log('fetchMovies');
+      dispatch(setIsLoading(true));
+      axios(
+        `https://api.themoviedb.org/3/search/movie?api_key=${APIKEY}&query=${searchQuery}&adult=false&page=${page}`
+      ).then(res => {
+        dispatch(setFetchedMovies(res.data.results));
+        dispatch(setHasMore(page < res.data.total_pages));
+        dispatch(setIsLoading(false));
+      });
     }
+  }, [searchQuery, page]);
 
-    if (searchActivated) {
-      console.log(page);
-      if (hasMore) {
-        console.log(hasMore);
-        fetchMovies(searchQuery, page).then(r => {
-          console.log('r.total_pages', r.total_pages);
-          dispatch(setFetchedMovies(r.results));
+  const observer = useRef<IntersectionObserver>();
+  const lastElement = useCallback(
+    (node: HTMLDivElement) => {
+      if (isLoading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting && hasMore) {
+          console.log('intersecting');
+          dispatch(incrementPage());
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [isLoading, hasMore]
+  );
 
-          if (page >= r.total_pages) {
-            setHasMore(false);
-            console.log('hasMore set to false');
-          }
-        });
-      }
-    } else {
-      page === 1
-        ? dispatch(setFetchedMovies(trendingMovies))
-        : fetchTrending(page).then(r => {
-            dispatch(setFetchedMovies(r));
-          });
+  const markup = fetchedMovies.map(
+    ({ poster_path, title, release_date, overview, id }: Movie, index) => {
+      return (
+        <>
+          <div
+            key={id}
+            ref={index === fetchedMovies.length - 1 ? lastElement : undefined}
+            className="w-[220px] min-h-[400px] bg-gray-800 rounded-b-md hover:scale-[1.03] transition-transform cursor-pointer"
+            onClick={() => {
+              dispatch(setSelectedMovie({ poster_path, title, release_date, overview, id }));
+              dispatch(setModalOpened(true));
+            }}
+          >
+            <img
+              src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+              alt={title}
+              width="220"
+              className="object-cover"
+            />
+            <div className="w-[220px] p-2">
+              <p className="text-white break-words">{title}</p>
+              <p className="text-white">{release_date?.slice(0, 4)}</p>
+            </div>
+          </div>
+        </>
+      );
     }
-  }, [page]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
-        console.log('intersecting');
-        dispatch(incrementPage());
-      }
-    });
-
-    observer.observe(loader.current!);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [hasMore]);
-
-  const markup = fetchedMovies.map(({ poster_path, title, release_date, overview, id }: Movie) => {
-    return (
-      <div
-        key={id}
-        className="w-[220px] min-h-[400px] bg-gray-800 rounded-b-md hover:scale-[1.03] transition-transform cursor-pointer"
-        onClick={() => {
-          dispatch(setSelectedMovie({ poster_path, title, release_date, overview, id }));
-          dispatch(setModalOpened(true));
-        }}
-      >
-        <img
-          src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-          alt={title}
-          width="220"
-          className="object-cover"
-        />
-        <div className="w-[220px] p-2">
-          <p className="text-white break-words">{title}</p>
-          <p className="text-white">{release_date?.slice(0, 4)}</p>
-        </div>
-      </div>
-    );
-  });
+  );
 
   return (
     <>
       <div className="flex justify-center flex-wrap gap-5">{markup}</div>
-      <div ref={loader}></div>
     </>
   );
 }

@@ -1,7 +1,6 @@
 import Image from 'next/image';
-import { useAppSelector } from '@/components/App/hooks';
+import { useAppSelector, useAppDispatch } from '@/components/App/hooks';
 import { useRouter } from 'next/router';
-import { GetServerSideProps } from 'next';
 import axios from 'axios';
 
 import 'rodal/lib/rodal.css';
@@ -10,26 +9,32 @@ import Auth from '@/components/Auth';
 import Search from '@/components/Search';
 import Gallery from '@/components/Gallery';
 import Details from '@/components/Details';
+import { setFetchedMovies, setHasMore } from '@/components/App/hexaSlice';
+import { useEffect } from 'react';
 
-export const getServerSideProps: GetServerSideProps<{
-  trendingMovies: [];
-}> = async () => {
+export const APIKEY = 'c3c6a5436a9f4e63accef267f4683152';
+
+export const getServerSideProps = async () => {
   const res = await axios(
-    'https://api.themoviedb.org/3/trending/movie/day?api_key=c3c6a5436a9f4e63accef267f4683152&adult=false&page=1'
+    `https://api.themoviedb.org/3/trending/movie/day?api_key=${APIKEY}&adult=false&page=1`
   );
-  const trendingMovies = res.data.results;
 
   return {
     props: {
-      trendingMovies,
+      trendingMovies: res.data.results,
     },
   };
 };
 
-export default function Home({ trendingMovies }: { trendingMovies: [] }) {
+export default function Home({ trendingMovies }: { trendingMovies: []; totalPages: number }) {
   const { selectedMovie } = useAppSelector(state => state.hexa);
-
+  const dispatch = useAppDispatch();
   const router = useRouter();
+
+  useEffect(() => {
+    dispatch(setFetchedMovies(trendingMovies));
+    dispatch(setHasMore(true));
+  }, []);
 
   return (
     <div className="flex flex-col gap-5">
@@ -47,7 +52,7 @@ export default function Home({ trendingMovies }: { trendingMovies: [] }) {
         </div>
         <Search />
       </div>
-      <Gallery trendingMovies={trendingMovies} />
+      <Gallery />
       {selectedMovie && <Details />}
     </div>
   );

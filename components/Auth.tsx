@@ -6,7 +6,7 @@ import { FiLogIn, FiLogOut } from 'react-icons/fi';
 
 import { setSignedIn, setFavoriteMovies } from '@/components/App/hexaSlice';
 
-import { updateUser, fetchFavoriteMovies } from './dBase';
+import { updateUser, fetchFavoriteMovies } from './firebase';
 
 import { initializeApp } from 'firebase/app';
 import {

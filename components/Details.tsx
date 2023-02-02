@@ -8,7 +8,7 @@ import 'rodal/lib/rodal.css';
 
 import { setFavoriteMovies, setModalOpened, setIsFavorite } from '@/components/App/hexaSlice';
 
-import { fetchFavoriteMovies, addFavoriteMovie, removeFavoriteMovie } from './dBase';
+import { fetchFavoriteMovies, addFavoriteMovie, removeFavoriteMovie } from './firebase';
 
 export default function Details() {
   const { selectedMovie, modalOpened, favoriteMovies, isFavorite } = useAppSelector(

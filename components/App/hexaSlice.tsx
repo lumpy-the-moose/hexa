@@ -3,8 +3,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface authState {
   signedIn: boolean;
   searchQuery: string;
-  searchActivated: boolean;
   page: number;
+  isLoading: boolean;
+  hasMore: boolean;
   fetchedMovies: Movie[];
   favoriteMovies: [];
   selectedMovie: Movie;
@@ -15,8 +16,9 @@ interface authState {
 const initialState: authState = {
   signedIn: false,
   searchQuery: '',
-  searchActivated: false,
   page: 1,
+  isLoading: false,
+  hasMore: false,
   fetchedMovies: [],
   favoriteMovies: [],
   selectedMovie: {
@@ -24,7 +26,7 @@ const initialState: authState = {
     title: '',
     release_date: '',
     overview: '',
-    id: -1,
+    id: 0,
   },
   modalOpened: false,
   isFavorite: false,
@@ -40,14 +42,17 @@ export const hexaSlice = createSlice({
     setSearchQuery: (state, action: PayloadAction<string>) => {
       state.searchQuery = action.payload;
     },
-    setSearchActivated: (state, action: PayloadAction<boolean>) => {
-      state.searchActivated = action.payload;
-    },
     incrementPage: state => {
       state.page += 1;
     },
     resetPage: state => {
-      state.page = 0;
+      state.page = 1;
+    },
+    setIsLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    },
+    setHasMore: (state, action: PayloadAction<boolean>) => {
+      state.hasMore = action.payload;
     },
     setFetchedMovies: (state, action: PayloadAction<[]>) => {
       state.fetchedMovies = [...state.fetchedMovies, ...action.payload];
@@ -73,9 +78,10 @@ export const hexaSlice = createSlice({
 export const {
   setSignedIn,
   setSearchQuery,
-  setSearchActivated,
   incrementPage,
   resetPage,
+  setIsLoading,
+  setHasMore,
   setFetchedMovies,
   clearFetchedMovies,
   setFavoriteMovies,
