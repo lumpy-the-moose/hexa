@@ -22,13 +22,11 @@ export default function Gallery() {
 
   useEffect(() => {
     if (!searchQuery) return;
-    console.log('clear');
     dispatch(clearFetchedMovies());
   }, [searchQuery]);
 
   useEffect(() => {
     if (!searchQuery && page !== 1) {
-      console.log('fetchTrending');
       dispatch(setIsLoading(true));
       axios(
         `https://api.themoviedb.org/3/trending/movie/day?api_key=${APIKEY}&adult=false&page=${page}`
@@ -38,7 +36,6 @@ export default function Gallery() {
         dispatch(setIsLoading(false));
       });
     } else if (searchQuery) {
-      console.log('fetchMovies');
       dispatch(setIsLoading(true));
       axios(
         `https://api.themoviedb.org/3/search/movie?api_key=${APIKEY}&query=${searchQuery}&adult=false&page=${page}`
@@ -57,7 +54,6 @@ export default function Gallery() {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting && hasMore) {
-          console.log('intersecting');
           dispatch(incrementPage());
         }
       });

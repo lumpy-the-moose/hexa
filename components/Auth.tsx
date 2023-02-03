@@ -27,8 +27,6 @@ const firebaseConfig = {
   databaseURL: 'https://hexa-f88fc-default-rtdb.europe-west1.firebasedatabase.app/',
 };
 
-// Initialize Firebase
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
@@ -48,24 +46,16 @@ export default function Auth() {
   function authCheck() {
     onAuthStateChanged(auth, async user => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/firebase.User
         const uid = user.uid;
         dispatch(setSignedIn(true));
         setEmail(user.email);
         setAvatarURL(user.photoURL);
-        console.log('SignedIn');
         document.cookie = `uid=${uid}; path=/`;
         const favoriteMovies = await fetchFavoriteMovies(document.cookie.slice(4));
         favoriteMovies && dispatch(setFavoriteMovies(favoriteMovies));
-
-        // ...
       } else {
-        // User is signed out
         dispatch(setSignedIn(false));
-        console.log('SignedOut');
         document.cookie = `uid=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
-        // ...
       }
     });
   }
@@ -73,32 +63,22 @@ export default function Auth() {
   async function logIn() {
     signInWithPopup(auth, provider)
       .then(result => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        // The signed-in user info.
         const { uid, email } = result.user;
         updateUser(uid, email);
+        console.log('signedIn');
       })
       .catch(error => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+        console.log(error);
       });
   }
 
   async function logOut() {
     signOut(auth)
       .then(() => {
-        // Sign-out successful.
+        console.log('signedOut');
       })
       .catch(error => {
-        // An error happened.
+        console.log(error);
       });
   }
 

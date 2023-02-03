@@ -6,6 +6,20 @@ import Details from '@/components/Details';
 
 import { useAppSelector, useAppDispatch } from '@/components/App/hooks';
 import { setSelectedMovie, setModalOpened } from '@/components/App/hexaSlice';
+import axios from 'axios';
+import { APIKEY } from '@/pages/index';
+
+export const getServerSideProps = async () => {
+  const res = await axios(
+    `https://api.themoviedb.org/3/trending/movie/day?api_key=${APIKEY}&adult=false&page=1`
+  );
+
+  return {
+    props: {
+      trendingMovies: res.data.results,
+    },
+  };
+};
 
 export default function Favorites() {
   const { selectedMovie, favoriteMovies } = useAppSelector(state => state.hexa);

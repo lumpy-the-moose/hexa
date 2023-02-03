@@ -25,8 +25,6 @@ export function addFavoriteMovie(userId: string, movie: Movie) {
     const updates: any = {};
     updates['users/' + userId + '/favoriteMovies/' + movie.id] = movie;
     update(ref(database), updates);
-  } else {
-    console.log('%cPlease LogIn', 'color: green');
   }
 }
 
@@ -41,10 +39,8 @@ export async function fetchFavoriteMovies(uid: string): Promise<any> {
 
   return await get(child(favoriteMoviesRef, `users/${uid}/favoriteMovies/`)).then(snapshot => {
     if (snapshot.exists()) {
-      console.log(Object.values(snapshot.val()));
       return Object.values(snapshot.val());
     } else {
-      console.log('No data available');
       return [];
     }
   });

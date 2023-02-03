@@ -13,7 +13,6 @@ export default function Search() {
       className="flex grow h-16"
       onSubmit={e => {
         e.preventDefault();
-        console.log('submitted');
         dispatch(setSearchQuery(input.current.value));
         dispatch(resetPage());
       }}
